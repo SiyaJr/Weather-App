@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { WiDaySunny, WiRain, WiSnow, WiCloudy, WiThunderstorm, WiFog } from 'react-icons/wi';
 import Forecast from './Forecast';
+import './Weather.css';
 
 function Weather() {
   const [city, setCity] = useState('');
@@ -9,6 +10,13 @@ function Weather() {
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState('C');
   const [searchHistory, setSearchHistory] = useState([]);
+  const [currentDay, setCurrentDay] = useState('');
+
+  useEffect(() => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const today = new Date();
+    setCurrentDay(days[today.getDay()]);
+  }, []);
 
   const getWeatherIcon = (condition, size = 48) => {
     const id = condition.toLowerCase();
@@ -55,11 +63,11 @@ function Weather() {
       setLoading(false);
     }
   };
+
   const fetchWeatherByCoords = async (lat, lon) => {
     setLoading(true);
     setError(null);
     try {
-      // First get city name from coordinates
       const reverseGeoRes = await fetch(
         `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=32045d6ccc6b9283ed0219d738c5ebc8`
       );
@@ -71,7 +79,6 @@ function Weather() {
       const geoData = await reverseGeoRes.json();
       const locationName = geoData[0]?.name || "Your Location";
       
-      // Now fetch weather using coordinates (more reliable than city name)
       const [currentRes, forecastRes] = await Promise.all([
         fetch(
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit === 'C' ? 'metric' : 'imperial'}&appid=32045d6ccc6b9283ed0219d738c5ebc8`
@@ -89,7 +96,7 @@ function Weather() {
       const forecastData = await forecastRes.json();
       
       setWeatherData({
-        current: { ...currentData, name: locationName }, // Use the reversed geocoded name
+        current: { ...currentData, name: locationName },
         forecast: forecastData
       });
       setCity(locationName);
@@ -118,7 +125,7 @@ function Weather() {
 
   useEffect(() => {
     fetchWeather('London');
-  }, []);
+  }, [unit]);
 
   return (
     <div className="weather-container">
@@ -165,19 +172,72 @@ function Weather() {
         <>
           <div className="weather-display">
             <h2>{weatherData.current.name}, {weatherData.current.sys.country}</h2>
+            <p className="current-day">{currentDay}</p>
+            
             <div className="weather-main">
-              {getWeatherIcon(weatherData.current.weather[0].main)}
-              <span className="temp">
-                {Math.round(weatherData.current.main.temp)}°{unit}
-              </span>
+              {getWeatherIcon(weatherData.current.weather[0].main, 64)}
+              <div className="temp-container">
+                <span className="temp-main">
+                  {Math.round(weatherData.current.main.temp)}°{unit}
+                </span>
+                <div className="temp-range">
+                  <span className="temp-high">
+                    H: {Math.round(weatherData.current.main.temp_max)}°{unit}
+                  </span>
+                  <span className="temp-low">
+                    L: {Math.round(weatherData.current.main.temp_min)}°{unit}
+                  </span>
+                </div>
+              </div>
             </div>
+            
             <p className="weather-desc">
               {weatherData.current.weather[0].description}
             </p>
+            
             <div className="weather-details">
-              <p>Humidity: {weatherData.current.main.humidity}%</p>
-              <p>Wind: {weatherData.current.wind.speed} {unit === 'C' ? 'm/s' : 'mph'}</p>
-              <p>Feels like: {Math.round(weatherData.current.main.feels_like)}°{unit}</p>
+              <div className="detail-item">
+                <span className="detail-label">Feels like:</span>
+                <span className="detail-value">
+                  {Math.round(weatherData.current.main.feels_like)}°{unit}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Humidity:</span>
+                <span className="detail-value">
+                  {weatherData.current.main.humidity}%
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Wind:</span>
+                <span className="detail-value">
+                  {weatherData.current.wind.speed} {unit === 'C' ? 'm/s' : 'mph'}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Pressure:</span>
+                <span className="detail-value">
+                  {weatherData.current.main.pressure} hPa
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Visibility:</span>
+                <span className="detail-value">
+                  {(weatherData.current.visibility / 1000).toFixed(1)} km
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Sunrise:</span>
+                <span className="detail-value">
+                  {new Date(weatherData.current.sys.sunrise * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                </span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Sunset:</span>
+                <span className="detail-value">
+                  {new Date(weatherData.current.sys.sunset * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                </span>
+              </div>
             </div>
           </div>
           
