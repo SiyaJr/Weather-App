@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { WiDaySunny, WiRain, WiSnow, WiCloudy, WiThunderstorm, WiFog } from 'react-icons/wi';
 import Forecast from './Forecast';
+import './Weather.css';
 
 function Weather() {
   const [city, setCity] = useState('');
@@ -10,7 +11,7 @@ function Weather() {
   const [unit, setUnit] = useState('C');
   const [searchHistory, setSearchHistory] = useState([]);
   const [currentDay, setCurrentDay] = useState('');
-  const [weatherCondition, setWeatherCondition] = useState('clear');
+  const [weatherCondition, setWeatherCondition] = useState('');
 
   useEffect(() => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -18,7 +19,7 @@ function Weather() {
     setCurrentDay(days[today.getDay()]);
   }, []);
 
-  const getWeatherIcon = (condition, size = 64) => {
+ const getWeatherIcon = (condition, size = 64) => {
     const id = condition.toLowerCase();
     if (id.includes('thunderstorm')) {
       setWeatherCondition('thunderstorm');
@@ -43,6 +44,7 @@ function Weather() {
     setWeatherCondition('sunny');
     return <WiDaySunny size={size} className="weather-icon sunny" />;
   };
+
 
   const fetchWeather = async (location) => {
     setLoading(true);
@@ -144,7 +146,7 @@ function Weather() {
   }, [unit]);
 
   return (
-    <div className={`weather-container ${weatherCondition}`}>
+    <div className="weather-container">
       <h1>Weather App</h1>
       
       <form onSubmit={(e) => {
@@ -158,9 +160,8 @@ function Weather() {
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder="Enter city name"
-          className="search-input"
         />
-        <button type="submit" className="search-btn">Search</button>
+        <button type="submit">Search</button>
       </form>
       
       <div className="unit-toggle">
@@ -182,23 +183,17 @@ function Weather() {
         Use My Location
       </button>
 
-      {loading && (
-        <div className="loading-animation">
-          <div className="loader"></div>
-          <p>Loading weather data...</p>
-        </div>
-      )}
-      
+      {loading && <p>Loading weather data...</p>}
       {error && <p className="error">{error}</p>}
 
       {weatherData && (
         <>
-          <div className={`weather-display ${weatherCondition}`}>
+           <div className="weather-display">
             <h2>{weatherData.current.name}, {weatherData.current.sys.country}</h2>
             <p className="current-day">{currentDay}</p>
             
             <div className="weather-main">
-              {getWeatherIcon(weatherData.current.weather[0].main)}
+              {getWeatherIcon(weatherData.current.weather[0].main, 64)},{weatherCondition}
               <div className="temp-container">
                 <span className="temp-main">
                   {Math.round(weatherData.current.main.temp)}°{unit}
