@@ -171,3 +171,163 @@ button:hover {
 .search-history li:hover {
   background-color: #bdc3c7;
 }
+
+/* Base styles remain the same, adding new animations below */
+
+/* Weather condition animations */
+.weather-icon {
+  transition: all 0.5s ease;
+}
+
+/* Sunny animation */
+.sunny .weather-icon {
+  color: #f39c12;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Rain animation */
+.rain .weather-icon {
+  color: #3498db;
+  animation: rainBounce 1.5s infinite;
+}
+
+@keyframes rainBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Thunderstorm animation */
+.thunderstorm .weather-icon {
+  color: #9b59b6;
+  animation: thunderFlash 3s infinite;
+}
+
+@keyframes thunderFlash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Snow animation */
+.snow .weather-icon {
+  color: #ecf0f1;
+  animation: snowFall 3s infinite;
+}
+
+@keyframes snowFall {
+  0% { transform: translateY(-10px); opacity: 0; }
+  100% { transform: translateY(10px); opacity: 1; }
+}
+
+/* Cloudy animation */
+.cloudy .weather-icon {
+  color: #95a5a6;
+  animation: cloudMove 4s infinite alternate;
+}
+
+@keyframes cloudMove {
+  0% { transform: translateX(-5px); }
+  100% { transform: translateX(5px); }
+}
+
+/* Fog animation */
+.fog .weather-icon {
+  color: #bdc3c7;
+  animation: fogPulse 4s infinite;
+}
+
+@keyframes fogPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Hover transitions */
+.search-input {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.search-btn, .geo-btn, .unit-toggle button {
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.search-btn:hover, .geo-btn:hover, .unit-toggle button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.weather-details .detail-item {
+  transition: all 0.3s ease;
+}
+
+.weather-details .detail-item:hover {
+  transform: translateX(5px);
+  background-color: #d6eaf8;
+}
+
+.search-history li {
+  transition: all 0.3s ease;
+}
+
+.search-history li:hover {
+  transform: scale(1.05);
+  background-color: #3498db;
+  color: white;
+}
+
+/* Loading animation */
+.loading-animation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Background effects based on weather */
+.sunny .weather-display {
+  background: linear-gradient(135deg, #f9d423 0%, #f39c12 100%);
+}
+
+.rain .weather-display {
+  background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+}
+
+.thunderstorm .weather-display {
+  background: linear-gradient(135deg, #757f9a 0%, #d7dde8 100%);
+}
+
+.snow .weather-display {
+  background: linear-gradient(135deg, #e0e0e0 0%, #f5f7fa 100%);
+}
+
+.cloudy .weather-display {
+  background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
+}
+
+.fog .weather-display {
+  background: linear-gradient(135deg, #636363 0%, #a2ab58 100%);
+}
