@@ -11,7 +11,7 @@ function Weather() {
   const [unit, setUnit] = useState('C');
   const [searchHistory, setSearchHistory] = useState([]);
   const [currentDay, setCurrentDay] = useState('');
-  const [weatherCondition, setWeatherCondition] = useState('');
+  
 
   useEffect(() => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -19,32 +19,15 @@ function Weather() {
     setCurrentDay(days[today.getDay()]);
   }, []);
 
- const getWeatherIcon = (condition, size = 64) => {
+  const getWeatherIcon = (condition, size = 48) => {
     const id = condition.toLowerCase();
-    if (id.includes('thunderstorm')) {
-      setWeatherCondition('thunderstorm');
-      return <WiThunderstorm size={size} className="weather-icon thunderstorm" />;
-    }
-    if (id.includes('drizzle') || id.includes('rain')) {
-      setWeatherCondition('rain');
-      return <WiRain size={size} className="weather-icon rain" />;
-    }
-    if (id.includes('snow')) {
-      setWeatherCondition('snow');
-      return <WiSnow size={size} className="weather-icon snow" />;
-    }
-    if (id.includes('cloud')) {
-      setWeatherCondition('cloudy');
-      return <WiCloudy size={size} className="weather-icon cloudy" />;
-    }
-    if (id.includes('fog') || id.includes('mist')) {
-      setWeatherCondition('fog');
-      return <WiFog size={size} className="weather-icon fog" />;
-    }
-    setWeatherCondition('sunny');
-    return <WiDaySunny size={size} className="weather-icon sunny" />;
+    if (id.includes('thunderstorm')) return <WiThunderstorm size={size} />;
+    if (id.includes('drizzle') || id.includes('rain')) return <WiRain size={size} />;
+    if (id.includes('snow')) return <WiSnow size={size} />;
+    if (id.includes('cloud')) return <WiCloudy size={size} />;
+    if (id.includes('fog') || id.includes('mist')) return <WiFog size={size} />;
+    return <WiDaySunny size={size} />;
   };
-
 
   const fetchWeather = async (location) => {
     setLoading(true);
@@ -188,12 +171,12 @@ function Weather() {
 
       {weatherData && (
         <>
-           <div className="weather-display">
+          <div className="weather-display">
             <h2>{weatherData.current.name}, {weatherData.current.sys.country}</h2>
             <p className="current-day">{currentDay}</p>
             
             <div className="weather-main">
-              {getWeatherIcon(weatherData.current.weather[0].main, 64)},{weatherCondition}
+              {getWeatherIcon(weatherData.current.weather[0].main, 64)}
               <div className="temp-container">
                 <span className="temp-main">
                   {Math.round(weatherData.current.main.temp)}°{unit}
